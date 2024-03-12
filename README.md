@@ -376,9 +376,7 @@ bob@dylan:~$
 - `File`: [utils/](./utils/), [routes/index.js](./routes/index.js), [controllers/UsersController.js](./controllers/UsersController.js)
 
 ## 4. Authenticate a user
-
 ### mandatory
-
 ===================
 
 In the file `routes/index.js`, add 3 new endpoints:
