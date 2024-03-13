@@ -35,10 +35,7 @@ class DBClient {
 
   // Returns the MongoDB client if the connection is active
   isAlive() {
-    if (this.client.connected) {
-      return true;
-    }
-    return false;
+    return this.client.isConnected();
   }
 
   /**
