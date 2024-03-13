@@ -33,7 +33,7 @@ class UsersController {
 
     try {
       // Check if the email already exists in the database
-      const userEmailExists = await dbClient.db().collection('users').findOne({ email });
+      const userEmailExists = await dbClient.db.collection('users').findOne({ email });
       if (userEmailExists) {
         return res.status(400).send({ error: 'Email already exists' });
       }
@@ -47,7 +47,7 @@ class UsersController {
       console.log('User object:', newUser);
 
       // Insert the new user into the database
-      const userInsertDatabase = await dbClient.db().collection('users').insertOne(newUser);
+      const userInsertDatabase = await dbClient.db.collection('users').insertOne(newUser);
 
       // Return the newly created user's ID and email
       return res.status(201).send({ email, id: userInsertDatabase.insertedId });
