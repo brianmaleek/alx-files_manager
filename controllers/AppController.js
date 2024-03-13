@@ -17,7 +17,7 @@ class AppController {
     // Check if Redis and MongoDB are alive
     const redisAlive = redisClient.isAlive();
     const dbAlive = dbClient.isAlive();
-    res.status(200).json({ redis: redisAlive, db: dbAlive });
+    return res.status(200).json({ redis: redisAlive, db: dbAlive });
   }
 
   /**
@@ -31,7 +31,7 @@ class AppController {
     const userCountTotal = await dbClient.nbUsers();
     const fileCountTotal = await dbClient.nbFiles();
     // Return the statistics with status 200
-    res.status(200).json({ users: userCountTotal, files: fileCountTotal });
+    return res.status(200).json({ users: userCountTotal, files: fileCountTotal });
   }
 }
 
