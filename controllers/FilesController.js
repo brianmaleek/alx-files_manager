@@ -106,7 +106,55 @@ class FilesController {
       return res.status(500).send({ error: 'Server error' });
     }
   }
+  
+  static async putPublish(req, res) {
+    try {
+      const { userid } = await getIdAndKey(req);
+      if (!userid) return res.status(401).send({ error: 'Unauthorized' });
+
+      const user = await dbClient.usersCollection.findOne({ _id: ObjectId(userid) });
+      if (!user) return res.status(401).send({ error: 'Unauthorized' });
+
+      const fileId = req.params.id;
+      const file = await dbClient.filesCollection.findOne({ _id: ObjectId(fileId) });
+      if (!file) return res.status(404).send({ error: 'Not found' });
+
+      if (file.userId.toString() !== userid) return res.status(404).send({ error: 'Not found' });
+
+      await dbClient.filesCollection.updateOne({ _id: ObjectId(fileId) }, { $set: { isPublic: true } });
+
+      return res.status(200).send({ ...file, isPublic: true });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ error: 'Server error' });
+    }
+  }
+
+  static async putUnpublish(req, res) {
+    try {
+      const { userid } = await getIdAndKey(req);
+      if (!userid) return res.status(401).send({ error: 'Unauthorized' });
+
+      const user = await dbClient.usersCollection.findOne({ _id: ObjectId(userid) });
+      if (!user) return res.status(401).send({ error: 'Unauthorized' });
+
+      const fileId = req.params.id;
+      const file = await dbClient.filesCollection.findOne({ _id: ObjectId(fileId) });
+      if (!file) return res.status(404).send({ error: 'Not found' });
+
+      if (file.userId.toString() !== userid) return res.status(404).send({ error: 'Not found' });
+
+      await dbClient.filesCollection.updateOne({ _id: ObjectId(fileId) }, { $set: { isPublic: false } });
+
+      return res.status(200).send({ ...file, isPublic: false });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ error: 'Server error' });
+    }
+  }
 }
+
+
 
 // Export the FilesController class
 module.exports = FilesController;
