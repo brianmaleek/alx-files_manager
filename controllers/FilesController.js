@@ -63,6 +63,27 @@ class FilesController {
       return res.status(500).send({ error: 'Upload failed' });
     }
   }
+
+  static async getShow(req, res) {
+    try {
+      const { userid } = await getIdAndKey(req);
+      if (!userid) return res.status(401).send({ error: 'Unauthorized' });
+
+      const user = await dbClient.usersCollection.findOne({ _id: ObjectId(userid) });
+      if (!user) return res.status(401).send({ error: 'Unauthorized' });
+
+      const fileId = req.params.id;
+      const file = await dbClient.files.findOne({ _id: ObjectId(fileId) });
+      if (!file) return res.status(404).send({ error: 'Not found' });
+
+      if (file.userId.toString() !== userid) return res.status(404).send({ error: 'Not found' });
+
+      return res.status(200).send({ ...file });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ error: 'Server error' });
+    }
+  }
 }
 
 // Export the FilesController class
