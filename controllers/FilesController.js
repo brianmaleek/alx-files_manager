@@ -84,6 +84,28 @@ class FilesController {
       return res.status(500).send({ error: 'Server error' });
     }
   }
+
+  static async getIndex(req, res) {
+    try {
+      const { userid } = await getIdAndKey(req);
+      if (!userid) return res.status(401).send({ error: 'Unauthorized' });
+
+      const user = await dbClient.usersCollection.findOne({ _id: ObjectId(userid) });
+      if (!user) return res.status(401).send({ error: 'Unauthorized' });
+
+      const parentId = req.query.parentId || 0;
+      const parent = await dbClient.filesCollection.findOne({ _id: ObjectId(parentId) });
+      if (parentId !== 0 && !parent) return res.status(200).send([]);
+
+      const query = { userId: userid, parentId };
+      const files = await dbClient.filesCollection.find(query).toArray();
+
+      return res.status(200).send(files);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ error: 'Server error' });
+    }
+  }
 }
 
 // Export the FilesController class
