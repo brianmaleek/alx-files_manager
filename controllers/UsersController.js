@@ -40,7 +40,7 @@ class UsersController {
       // Check if the email already exists in the database
       const userEmailExists = await dbClient.db.collection('users').findOne({ email });
       if (userEmailExists) {
-        return res.status(400).send({ error: 'Email already exists' });
+        return res.status(400).send({ error: 'Already exist' });
       }
 
       // Hash the user password using sha1
